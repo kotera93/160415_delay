@@ -1,0 +1,50 @@
+//delayTime_0.5s
+import processing.video.*;
+
+final int delaytime = 8;
+
+Capture cam;
+PImage[] buffer;
+int nFrames = (8/1)*delaytime;
+int iWrite = 0, iRead = 1;
+
+void setup(){
+  size(1280, 720);
+  
+  String[] cameras = Capture.list();
+  
+  if (cameras.length == 0) {
+    //println("There are no cameras available for capture.");
+    exit();
+  } 
+  else {
+    //println("Available cameras:");
+    for (int i = 0; i < cameras.length; i++) {
+      //println(cameras[i]);
+    }
+    
+  //cam = new Capture(this, cameras[0]);
+  cam = new Capture(this, 1280, 720,"BUFFALO BSW32K02H Webcam");
+  cam.start();
+  buffer = new PImage[nFrames];
+  }
+}
+
+void draw() {
+  if(cam.available()) {
+    cam.read();
+    //tint(255,255,255, iWrite * 30);
+    buffer[iWrite] = cam.get();
+    if(buffer[iRead] != null){
+      image(buffer[iRead], 0, 0);
+    }
+    iWrite++;
+    iRead++;
+    if(iRead >= nFrames-1){
+      iRead = 0;
+    }
+    if(iWrite >= nFrames-1){
+      iWrite = 0;
+    }
+  }       
+}
